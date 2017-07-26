@@ -1,23 +1,21 @@
 import * as ResizeSensor from "css-element-queries/src/ResizeSensor"
 import {
   AmbientLight,
-  Camera, CircleBufferGeometry, Mesh, MeshStandardMaterial, PointLight, SphereBufferGeometry,
+  PointLight,
   Vector3
 } from "three";
 
 export class ThreeJsGateway {
 
-  app: any = null; //three.js app object
-  camera: Camera;
+  private app: any = null; //three.js app object
 
-  get editor() {
+  private get editor() {
     return this.app.editor;
   }
 
-  meshCount: number = 0;
+  sphere: any = null;
 
   constructor() {
-
   }
 
   init(container) {
@@ -27,7 +25,6 @@ export class ThreeJsGateway {
     }
 
     this.app = new App(container);
-    this.camera = this.editor.camera;
 
     //set initial canvas size
     this.onResize();
@@ -39,16 +36,13 @@ export class ThreeJsGateway {
     this.prepareScene();
   }
 
-  onResize() {
+  private onResize() {
     if (this.editor) {
       this.editor.signals.windowResize.dispatch();
     }
   }
 
   private register() {
-
-    this.editor.signals.cameraChanged.add(this.onCameraChanged.bind(this));
-
     let editor = this.editor;
     document.addEventListener('keydown', function (event) {
 
@@ -108,36 +102,9 @@ export class ThreeJsGateway {
       }
 
     }, false);
-  }
 
-  private onCameraChanged(camera: Camera) {
-    this.camera = camera;
-  }
-
-  setCameraPosition(x: number, y: number, z: number) {
-    let newPos = new Vector3(x, y, z);
-    if (!this.camera.position.equals(newPos)) {
-      this.editor.execute(new SetPositionCommand(this.camera, newPos));
-    }
-  }
-
-  undo() {
-    this.editor.undo();
-  }
-
-  addSphere() {
-    this.app.addSphere();
-  }
-
-  addCircle() {
-    var radius = 1;
-    var segments = 32;
-
-    var geometry = new CircleBufferGeometry(radius, segments);
-    var mesh = new Mesh(geometry, new MeshStandardMaterial());
-    mesh.name = 'Circle ' + (++this.meshCount);
-
-    this.editor.execute(new AddObjectCommand(mesh));
+    this.editor.signals.objectAdded.add(this.onObjectAdded.bind(this))
+    this.editor.signals.objectRemoved.add(this.onObjectRemoved.bind(this))
   }
 
   private prepareScene() {
@@ -147,8 +114,36 @@ export class ThreeJsGateway {
 
     let ambientLight = new AmbientLight(0xc0c0c0);
     this.editor.addObject(ambientLight);
+  }
 
-    this.addSphere();
-    this.addSphere();
+  undo() {
+    this.editor.undo();
+  }
+
+  redo() {
+    this.editor.redo();
+  }
+
+  addSphere() {
+    this.app.addSphere();
+  }
+
+  setSpherePosition(x: number, y: number, z: number) {
+    let newPos = new Vector3(x, y, z);
+    if (!this.sphere.position.equals(newPos)) {
+      this.editor.execute(new SetPositionCommand(this.sphere, newPos));
+    }
+  }
+
+  onObjectAdded(object: any) {
+    if (object.name.indexOf("Sphere") >= 0) {
+      this.sphere = object;
+    }
+  }
+
+  onObjectRemoved(object: any) {
+    if (object == this.sphere) {
+      this.sphere = null;
+    }
   }
 }

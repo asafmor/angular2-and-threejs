@@ -35,6 +35,7 @@ App.prototype = {
 
     var geometry = new THREE.SphereBufferGeometry(radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
     var mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({color: 0xff2320}));
+    mesh.name = "Sphere";
     mesh.position.set(0, 0, 0);
 
     this.editor.execute(new AddObjectCommand(mesh));

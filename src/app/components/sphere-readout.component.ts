@@ -5,7 +5,7 @@ import {ThreeJsGateway} from "../threejs-gateway";
   selector: 'camera-position-readout',
   template: `
     <p class="readout">
-      camera position: {{position.x}}, {{position.y}}, {{position.z}}
+      Sphere position: {{position.x}}, {{position.y}}, {{position.z}}
     </p>
   `,
   styles: [`
@@ -15,10 +15,16 @@ import {ThreeJsGateway} from "../threejs-gateway";
     }
   `]
 })
-export class CameraPositionReadoutComponent implements OnInit {
+export class SphereReadoutComponent implements OnInit {
+
+  private readonly zeroPosition: any = {x: 0, y: 0, z: 0};
 
   get position() {
-    return this.threejs.camera.position;
+    if (this.threejs.sphere) {
+      return this.threejs.sphere.position;
+    } else {
+      return this.zeroPosition;
+    }
   }
 
   constructor(private threejs: ThreeJsGateway) {
