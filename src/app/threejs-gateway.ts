@@ -1,149 +1,158 @@
-import * as ResizeSensor from "css-element-queries/src/ResizeSensor"
+import * as ResizeSensor from 'css-element-queries/src/ResizeSensor'
 import {
-  AmbientLight,
-  PointLight,
-  Vector3
-} from "three";
+	AmbientLight,
+	PointLight,
+	Vector3
+} from 'three';
 
 export class ThreeJsGateway {
 
-  private app: any = null; //three.js app object
+	private app: any = null; // three.js app object
 
-  private get editor() {
-    return this.app.editor;
-  }
+	private get editor() {
+		return this.app.editor;
+	}
 
-  sphere: any = null;
+	sphere: any = null;
 
-  constructor() {
-  }
+	constructor() {
+	}
 
-  init(container) {
-    if (this.app != null) {
-      console.log("ThreeJsGateway: can't initialize more than one threejs instance.");
-      return;
-    }
+	init(container) {
+		if (this.app != null) {
+			console.log('ThreeJsGateway: can\'t initialize more than one threejs instance.');
+			return;
+		}
 
-    this.app = new App(container);
+		this.app = new App(container);
 
-    //set initial canvas size
-    this.onResize();
-    //listen for size changes of the 'container' (uses an external library)
-    new ResizeSensor(container, this.onResize.bind(this));
+		// set initial canvas size
+		this.onResize();
+		// listen for size changes of the 'container' (uses an external library)
+		const resizeSensor = new ResizeSensor(container, this.onResize.bind(this));
 
-    this.register();
+		this.register();
 
-    this.prepareScene();
-  }
+		this.prepareScene();
+	}
 
-  private onResize() {
-    if (this.editor) {
-      this.editor.signals.windowResize.dispatch();
-    }
-  }
+	private onResize() {
+		if (this.editor) {
+			this.editor.signals.windowResize.dispatch();
+		}
+	}
 
-  private register() {
-    let editor = this.editor;
-    document.addEventListener('keydown', function (event) {
+	private register() {
+		const editor = this.editor;
+		document.addEventListener('keydown', function (event) {
 
-      switch (event.keyCode) {
+			switch (event.keyCode) {
 
-        case 8: // backspace
+				case 8: // backspace
 
-          event.preventDefault(); // prevent browser back
+					event.preventDefault(); // prevent browser back
 
-        case 46: // delete
+				case 46: // delete
 
-          var object = editor.selected;
+					const object = editor.selected;
 
-          if (object) {
-            if (confirm('Delete ' + object.name + '?') === false) return;
+					if (object) {
+						if (confirm('Delete ' + object.name + '?') === false) {
+							return;
+						}
 
-            var parent = object.parent;
-            if (parent !== null) editor.execute(new RemoveObjectCommand(object));
-          }
+						const parent = object.parent;
+						if (parent !== null) {
+							editor.execute(new RemoveObjectCommand(object));
+						}
+					}
 
-          break;
+					break;
 
-        case 90: // Register Ctrl-Z for Undo, Ctrl-Shift-Z for Redo
+				case 90: // Register Ctrl-Z for Undo, Ctrl-Shift-Z for Redo
 
-          if (event.ctrlKey && event.shiftKey) {
+					if (event.ctrlKey && event.shiftKey) {
 
-            editor.redo();
-            event.preventDefault();
+						editor.redo();
+						event.preventDefault();
 
-          } else if (event.ctrlKey) {
+					} else if (event.ctrlKey) {
 
-            editor.undo();
-            event.preventDefault();
+						editor.undo();
+						event.preventDefault();
 
-          }
+					}
 
-          break;
+					break;
 
-        case 87: // Register W for translation transform mode
+				case 87: // Register W for translation transform mode
 
-          editor.signals.transformModeChanged.dispatch('translate');
+					editor.signals.transformModeChanged.dispatch('translate');
 
-          break;
+					break;
 
-        case 69: // Register E for rotation transform mode
+				case 69: // Register E for rotation transform mode
 
-          editor.signals.transformModeChanged.dispatch('rotate');
+					editor.signals.transformModeChanged.dispatch('rotate');
 
-          break;
+					break;
 
-        case 82: // Register R for scaling transform mode
+				case 82: // Register R for scaling transform mode
 
-          editor.signals.transformModeChanged.dispatch('scale');
+					editor.signals.transformModeChanged.dispatch('scale');
 
-          break;
+					break;
 
-      }
+			}
 
-    }, false);
+		}, false);
 
-    this.editor.signals.objectAdded.add(this.onObjectAdded.bind(this))
-    this.editor.signals.objectRemoved.add(this.onObjectRemoved.bind(this))
-  }
+		this.editor.signals.objectAdded.add(this.onObjectAdded.bind(this));
+		this.editor.signals.objectRemoved.add(this.onObjectRemoved.bind(this));
+		this.editor.signals.objectChanged.add(this.onObjectChanged.bind(this));
+	}
 
-  private prepareScene() {
-    let pointLight = new PointLight(0xffffff);
-    pointLight.position.set(0, 100, 0);
-    this.editor.addObject(pointLight);
+	private prepareScene() {
+		const pointLight = new PointLight(0xffffff);
+		pointLight.position.set(0, 100, 0);
+		this.editor.addObject(pointLight);
 
-    let ambientLight = new AmbientLight(0xc0c0c0);
-    this.editor.addObject(ambientLight);
-  }
+		const ambientLight = new AmbientLight(0xc0c0c0);
+		this.editor.addObject(ambientLight);
+	}
 
-  undo() {
-    this.editor.undo();
-  }
+	undo() {
+		this.editor.undo();
+	}
 
-  redo() {
-    this.editor.redo();
-  }
+	redo() {
+		this.editor.redo();
+	}
 
-  addSphere() {
-    this.app.addSphere();
-  }
+	addSphere() {
+		this.app.addSphere();
+	}
 
-  setSpherePosition(x: number, y: number, z: number) {
-    let newPos = new Vector3(x, y, z);
-    if (!this.sphere.position.equals(newPos)) {
-      this.editor.execute(new SetPositionCommand(this.sphere, newPos));
-    }
-  }
+	setSpherePosition(x: number, y: number, z: number) {
+		const newPos = new Vector3(x, y, z);
+		if (!this.sphere.position.equals(newPos)) {
+			this.editor.execute(new SetPositionCommand(this.sphere, newPos));
+		}
+	}
 
-  onObjectAdded(object: any) {
-    if (object.name.indexOf("Sphere") >= 0) {
-      this.sphere = object;
-    }
-  }
+	onObjectAdded(object: any) {
+		if (object.name.indexOf('Sphere') >= 0) {
+			this.sphere = object;
+		}
+	}
 
-  onObjectRemoved(object: any) {
-    if (object == this.sphere) {
-      this.sphere = null;
-    }
-  }
+	onObjectRemoved(object: any) {
+		if (object === this.sphere) {
+			this.sphere = null;
+		}
+	}
+
+	onObjectChanged(object: any) {
+		console.log(object);
+	}
 }

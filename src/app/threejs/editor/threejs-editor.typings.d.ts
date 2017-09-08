@@ -1,7 +1,7 @@
 declare var App: AppModule;
 interface AppModule {
-  new(container: any);
-  Editor: EditorModule;
+	new(container: any);
+	editor: EditorModule;
 }
 
 declare var Viewport: any;
@@ -13,67 +13,67 @@ declare var SetPositionCommand: any;
 declare var Editor: EditorModule;
 interface EditorModule {
 
-  signals: {
-    editScript: any;
+	signals: {
+		editScript: any;
 
-    // player
+		// player
 
-    startPlayer: any;
-    stopPlayer: any;
+		startPlayer: any;
+		stopPlayer: any;
 
-    // vr
+		// vr
 
-    enterVR: any;
+		enterVR: any;
 
-    enteredVR: any;
-    exitedVR: any;
+		enteredVR: any;
+		exitedVR: any;
 
-    // actions
+		// actions
 
-    showModal: any;
+		showModal: any;
 
-    // notifications
+		// notifications
 
-    editorCleared: any;
+		editorCleared: any;
 
-    savingStarted: any;
-    savingFinished: any;
+		savingStarted: any;
+		savingFinished: any;
 
-    themeChanged: any;
+		themeChanged: any;
 
-    transformModeChanged: any;
-    snapChanged: any;
-    spaceChanged: any;
-    rendererChanged: any;
+		transformModeChanged: any;
+		snapChanged: any;
+		spaceChanged: any;
+		rendererChanged: any;
 
-    sceneBackgroundChanged: any;
-    sceneFogChanged: any;
-    sceneGraphChanged: any;
+		sceneBackgroundChanged: any;
+		sceneFogChanged: any;
+		sceneGraphChanged: any;
 
-    cameraChanged: any;
+		cameraChanged: any;
 
-    geometryChanged: any;
+		geometryChanged: any;
 
-    objectSelected: any;
-    objectFocused: any;
+		objectSelected: any;
+		objectFocused: any;
 
-    objectAdded: any;
-    objectChanged: any;
-    objectRemoved: any;
+		objectAdded: any;
+		objectChanged: any;
+		objectRemoved: any;
 
-    helperAdded: any;
-    helperRemoved: any;
+		helperAdded: any;
+		helperRemoved: any;
 
-    materialChanged: any;
+		materialChanged: any;
 
-    scriptAdded: any;
-    scriptChanged: any;
-    scriptRemoved: any;
+		scriptAdded: any;
+		scriptChanged: any;
+		scriptRemoved: any;
 
-    windowResize: any;
+		windowResize: any;
 
-    showGridChanged: any;
-    refreshSidebarObject3D: any;
-    historyChanged: any
-  };
+		showGridChanged: any;
+		refreshSidebarObject3D: any;
+		historyChanged: any
+	};
 }

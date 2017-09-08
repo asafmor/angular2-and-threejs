@@ -20,7 +20,7 @@
     "import-spacing": true,
     "indent": [
       true,
-      "spaces"
+      "tabs"
     ],
     "interface-over-type-literal": true,
     "label-position": true,
@@ -51,7 +51,7 @@
     "no-empty-interface": true,
     "no-eval": true,
     "no-inferrable-types": [
-      true,
+      false,
       "ignore-params"
     ],
     "no-misused-new": true,
@@ -59,7 +59,7 @@
     "no-shadowed-variable": true,
     "no-string-literal": false,
     "no-string-throw": true,
-    "no-switch-case-fall-through": true,
+    "no-switch-case-fall-through": false,
     "no-trailing-whitespace": true,
     "no-unnecessary-initializer": true,
     "no-unused-expression": true,
@@ -114,7 +114,7 @@
       "camelCase"
     ],
     "component-selector": [
-      true,
+      false,
       "element",
       "app",
       "kebab-case"

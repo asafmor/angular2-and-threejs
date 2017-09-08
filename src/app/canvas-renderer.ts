@@ -1,16 +1,16 @@
-import {Directive, Input, OnInit} from "@angular/core";
-import {ThreeJsGateway} from "./threejs-gateway";
+import { Directive, Input, OnInit } from '@angular/core';
+import { ThreeJsGateway } from './threejs-gateway';
 
-@Directive({selector: 'canvas-renderer'})
+@Directive({ selector: 'canvas-renderer' })
 export class CanvasRenderer implements OnInit {
 
-  @Input() container: any;
+	@Input() container: any;
 
-  constructor(private threejs: ThreeJsGateway) {
-  }
+	constructor(private threejs: ThreeJsGateway) {
+	}
 
-  ngOnInit(): void {
-    this.threejs.init(this.container);
-  }
+	ngOnInit(): void {
+		this.threejs.init(this.container);
+	}
 
 }
